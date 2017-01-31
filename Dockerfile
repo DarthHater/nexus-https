@@ -1,5 +1,5 @@
 FROM       centos:centos7
-MAINTAINER Brad Beck <bradley.beck+docker@gmail.com>
+MAINTAINER Jeffry Hesse <jeffryxtron+docker@gmail.com>
 
 ENV SONATYPE_DIR=/opt/sonatype
 ENV NEXUS_DIR=${SONATYPE_DIR}/nexus \
@@ -14,7 +14,11 @@ ENV EXTRA_JAVA_OPTS='' \
     JAVA_VERSION_HASH=e9e7ea248e2c4826b92b3f075a80e441 \
     NEXUS_CONTEXT='' \
     NEXUS_DATA=/nexus-data \
-    NEXUS_SSL=${NEXUS_DIR}/etc/ssl
+    NEXUS_SSL=${NEXUS_DIR}/etc/ssl \
+    NEXUS_PASSWORD=admin123 
+
+ARG DOCKER_HOSTED=5000
+ARG DOCKER_PROXY=5001
 
 RUN yum install -y curl tar \
   && yum clean all
@@ -53,7 +57,7 @@ RUN mkdir -p ${SONATYPE_WORK} \
 
 VOLUME ["${NEXUS_DATA}", "${NEXUS_SSL}"]
 
-EXPOSE 8081 8443
+EXPOSE 8081 8443 ${DOCKER_HOSTED} ${DOCKER_PROXY}
 USER nexus
 WORKDIR ${NEXUS_DIR}
 
